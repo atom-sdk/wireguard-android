@@ -19,6 +19,17 @@ android {
         viewBinding = true
     }
     namespace = pkg
+
+    signingConfigs {
+        this.create("signed") {
+            keyAlias = "key0"
+            keyPassword = "12345678"
+            storeFile = file("sign.jks")
+            storePassword = "12345678"
+            storeType = "jks"
+        }
+    }
+
     defaultConfig {
         applicationId = pkg
         minSdk = 21
@@ -36,6 +47,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("signed")
             proguardFiles("proguard-android-optimize.txt")
             packaging {
                 resources {

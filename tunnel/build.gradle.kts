@@ -6,6 +6,7 @@ val pkg: String = providers.gradleProperty("wireguardPackageName").get()
 
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     `maven-publish`
     signing
 }
@@ -68,6 +69,7 @@ android {
 dependencies {
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.collection)
+    implementation(libs.kotlinx.coroutines.android)
     compileOnly(libs.jsr305)
     testImplementation(libs.junit)
 }
