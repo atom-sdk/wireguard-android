@@ -22,6 +22,7 @@ import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
+import com.wireguard.util.WgLogDetector;
 import com.wireguard.util.Util;
 import com.wireguard.util.WgLogDetector;
 
