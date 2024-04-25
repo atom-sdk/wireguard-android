@@ -22,6 +22,7 @@ import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
+import com.wireguard.util.WgLogDetector;
 
 import java.net.InetAddress;
 import java.time.Instant;
@@ -348,7 +349,15 @@ public final class GoBackend implements Backend {
             } catch (final TimeoutException ignored) { }
         }
 
-        tunnel.onStateChange(state);
+        // If Tunnel UP state assigned, start detecting WireGuard logs to capture message
+        // `Received handshake response` that indicates the WireGuard is now connected
+        // else stop capturing WireGuard logs and send the tunnel state
+        if (state == State.UP) {
+            WgLogDetector.INSTANCE.startWGLogDetection(tunnel);
+        } else {
+            WgLogDetector.INSTANCE.stopWGLogDetection();
+            tunnel.onStateChange(state);
+        }
     }
 
     /**

@@ -42,7 +42,8 @@ public interface Tunnel {
     enum State {
         DOWN,
         TOGGLE,
-        UP;
+        UP,
+        HANDSHAKE_FAILED;
 
         /**
          * Get the state of a {@link Tunnel}
