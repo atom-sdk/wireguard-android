@@ -22,6 +22,7 @@ import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
+import com.wireguard.util.Util;
 import com.wireguard.util.WgLogDetector;
 
 import java.net.InetAddress;
@@ -349,14 +350,28 @@ public final class GoBackend implements Backend {
             } catch (final TimeoutException ignored) { }
         }
 
-        // If Tunnel UP state assigned, start detecting WireGuard logs to capture message
-        // `Received handshake response` that indicates the WireGuard is now connected
-        // else stop capturing WireGuard logs and send the tunnel state
-        if (state == State.UP) {
-            WgLogDetector.INSTANCE.startWGLogDetection(tunnel);
-        } else {
-            WgLogDetector.INSTANCE.stopWGLogDetection();
+        /**
+         * Handles WireGuard tunnel state transitions with device-specific behavior.
+         *
+         * <p><strong>Amazon TV/Firestick:</strong> On these devices, log access is restricted, so
+         * the tunnel state is reported directly without attempting log-based detection.</p>
+         *
+         * <p><strong>Other devices:</strong> If the state is {@code State.UP}, the sdk attempts to
+         * detect a successful handshake by reading logs through {@code WgLogDetector}. For all other
+         * states, the detector is stopped and the state is reported directly.</p>
+         *
+         * @param context the current context used to identify device type
+         * @param state the tunnel state to handle
+         */
+        if (Util.INSTANCE.isAmazonTV(context)) {
             tunnel.onStateChange(state);
+        } else {
+            if (state == State.UP) {
+                WgLogDetector.INSTANCE.startWGLogDetection(tunnel);
+            } else {
+                WgLogDetector.INSTANCE.stopWGLogDetection();
+                tunnel.onStateChange(state);
+            }
         }
     }
 
