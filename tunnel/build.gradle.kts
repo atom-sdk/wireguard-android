@@ -11,12 +11,12 @@ plugins {
     signing
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 android {
     compileSdk = 34
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
     namespace = "${pkg}.tunnel"
     defaultConfig {
         minSdk = 21
