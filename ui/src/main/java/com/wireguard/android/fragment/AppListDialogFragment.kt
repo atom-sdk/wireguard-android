@@ -49,15 +49,17 @@ class AppListDialogFragment : DialogFragment() {
                     packageInfos.forEach {
                         val packageName = it.packageName
                         val appInfo = it.applicationInfo
-                        val appData =
-                            ApplicationData(appInfo.loadIcon(pm), appInfo.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
-                        applicationData.add(appData)
-                        appData.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-                            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                                if (propertyId == BR.selected)
-                                    setButtonText()
-                            }
-                        })
+                        appInfo?.let { info ->
+                            val appData =
+                                ApplicationData(info.loadIcon(pm), info.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
+                            applicationData.add(appData)
+                            appData.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+                                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                                    if (propertyId == BR.selected)
+                                        setButtonText()
+                                }
+                            })
+                        }
                     }
                 }
                 applicationData.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
