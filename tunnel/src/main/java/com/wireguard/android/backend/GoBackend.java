@@ -24,8 +24,6 @@ import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 import com.wireguard.util.Util;
 import com.wireguard.util.WgLogDetector;
-import com.wireguard.util.Util;
-import com.wireguard.util.WgLogDetector;
 
 import java.net.InetAddress;
 import java.time.Instant;
